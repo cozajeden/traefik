@@ -2,10 +2,22 @@
 
 ## Initial configuration (one time)
 
-1. Create new volume
+> Create new volume
+
 ```bash
 sudo mkdir /traefik
-sudo mkdir /traefik/acme
-sudo touch /traefik/acme/acme.json
-sudo docker volume create traefik_acme --opt type=none --opt device=/traefik/acme/acme.json --opt o=bind
+sudo mkdir /traefik/acme_volume
+sudo touch /traefik/acme_volume/acme.json
+sudo chmod 600 /traefik/acme_volume/acme.json
+sudo chown -R root:root /traefik/acme_volume/acme.json
 ```
+
+## Create/Update stack
+
+```bash
+./update_prod.sh
+```
+
+## Atach services to traefik
+
+> Use `test.yml` as the template for labeling your services
