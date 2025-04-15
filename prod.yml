@@ -1,0 +1,34 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    command:
+      - "--log.level=INFO"
+      - "--providers.docker=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.http.tls.certresolver=myresolver"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.storage=acme.json"
+    ports:
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "trefik_acme:/acme.json"
+    networks:
+      - traefik
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+
+networks:
+  traefik:
+    driver: overlay
+    attachable: true
+
+volumes:
+  traefik_acme:
+    external: true
